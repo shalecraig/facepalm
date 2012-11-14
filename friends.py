@@ -2,6 +2,7 @@ import os.path
 import urllib
 import urllib2
 import json
+import re
 
 COOKIEFILE = 'cookies.lwp'
 # the path and filename to save your cookies in
@@ -84,9 +85,12 @@ def get_shared_connections(id1, id2):
   print response.info()
   res = response.read()
   f.write(res)
-  f = open("res.json", "w")
-  j = json.loads(res[len("for (;;);"):])
-  f.write(str(j))
+  # f = open("res.json", "w")
+  # j = json.loads(res[len("for (;;);"):])
+  # f.write(str(j))
+
+  found = re.findall("user.php\\?id=(\\d+)", res)
+  return found
 
 data = urllib.urlencode(values)
 # req = urllib2.Request('https://www.facebook.com/login.php?login_attempt=1', data)
@@ -131,7 +135,7 @@ else:
     response = urllib2.urlopen(req)
     f = open("login.html", "w")
     f.write(response.read())
-    get_shared_connections(617147, 100001259293395)
+    print get_shared_connections(617147, 100001259293395) #100003225219808
 
     # handle.read() returns the page
     # handle.geturl() returns the true url of the page fetched
