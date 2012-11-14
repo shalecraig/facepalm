@@ -1,3 +1,4 @@
+from sets import Set
 import os.path
 import urllib
 import urllib2
@@ -135,7 +136,17 @@ else:
     response = urllib2.urlopen(req)
     f = open("login.html", "w")
     f.write(response.read())
-    print get_shared_connections(617147, 100001259293395) #100003225219808
+
+    scanned_friends = Set([])
+    unscanned_friends = Set([100001259293395])
+    while len(unscanned_friends) > 0:
+      friend = unscanned_friends.pop()
+      unscanned_friends |= Set(get_shared_connections(617147, friend)) #100003225219808
+      scanned_friends.add(friend)
+      unscanned_friends -= scanned_friends
+      print "scanned", scanned_friends
+      print "unscanned", unscanned_friends
+    print scanned_friends
 
     # handle.read() returns the page
     # handle.geturl() returns the true url of the page fetched
